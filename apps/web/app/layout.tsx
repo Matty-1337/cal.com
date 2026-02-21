@@ -71,6 +71,7 @@ export const metadata = {
     site: "@calcom",
     creator: "@calcom",
     card: "summary_large_image",
+    // SMOKE-TEST: branding — revert this after confirming deploy
   },
   robots: {
     index: true,
