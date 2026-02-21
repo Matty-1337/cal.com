@@ -1,3 +1,4 @@
+<!-- Self-hosted fork — deployed on Railway. See docs/RAILWAY_SETUP.md for ops guide. -->
 <!-- PROJECT LOGO -->
 <p align="center">
   <a href="https://github.com/calcom/cal.com">

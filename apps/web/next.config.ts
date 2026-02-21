@@ -223,6 +223,14 @@ const nextConfig = (phase: string): NextConfig => {
 
   return {
     output: process.env.BUILD_STANDALONE === "true" ? "standalone" : undefined,
+    // Skip type-checking and linting during production builds when SKIP_TYPE_CHECK=1
+    // Avoids OOM on memory-constrained CI/Railway build containers.
+    typescript: {
+      ignoreBuildErrors: process.env.SKIP_TYPE_CHECK === "1",
+    },
+    eslint: {
+      ignoreDuringBuilds: process.env.SKIP_TYPE_CHECK === "1",
+    },
     serverExternalPackages: [
       "deasync",
       "http-cookie-agent",
