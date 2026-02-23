@@ -136,9 +136,22 @@ export const FULL_NAME_LENGTH_MAX_LIMIT = 50;
 export const API_NAME_LENGTH_MAX_LIMIT = 80;
 export const MINUTES_TO_BOOK = process.env.NEXT_PUBLIC_MINUTES_TO_BOOK || "5";
 export const ENABLE_PROFILE_SWITCHER = process.env.NEXT_PUBLIC_ENABLE_PROFILE_SWITCHER === "1";
+// DK-CUSTOM: Robust hostname parsing — handles both quoted JSON ("host.com") and plain strings (host.com)
+function parseHostnameList(raw: string | undefined): string[] {
+  if (!raw) return [];
+  try {
+    return JSON.parse(`[${raw}]`) as string[];
+  } catch {
+    // Fallback: treat as comma-separated plain strings (Railway strips quotes from env var values)
+    return raw
+      .split(",")
+      .map((h) => h.trim().replace(/^["']|["']$/g, ""))
+      .filter(Boolean);
+  }
+}
 // Needed for orgs
-export const ALLOWED_HOSTNAMES = JSON.parse(`[${process.env.ALLOWED_HOSTNAMES || ""}]`) as string[];
-export const RESERVED_SUBDOMAINS = JSON.parse(`[${process.env.RESERVED_SUBDOMAINS || ""}]`) as string[];
+export const ALLOWED_HOSTNAMES = parseHostnameList(process.env.ALLOWED_HOSTNAMES);
+export const RESERVED_SUBDOMAINS = parseHostnameList(process.env.RESERVED_SUBDOMAINS);
 
 export const ORGANIZATION_SELF_SERVE_PRICE = parseFloat(
   process.env.NEXT_PUBLIC_ORGANIZATIONS_SELF_SERVE_PRICE_NEW || "37"
