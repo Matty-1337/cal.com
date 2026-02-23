@@ -515,17 +515,6 @@ const nextConfig = (phase: string): NextConfig => {
     },
     async redirects() {
       const redirects = [
-        // DK-CUSTOM: Force HTTP → HTTPS on Railway (Railway accepts both but doesn't auto-redirect)
-        ...(process.env.NODE_ENV === "production"
-          ? [
-              {
-                source: "/:path*",
-                has: [{ type: "header" as const, key: "x-forwarded-proto", value: "http" }],
-                destination: `${process.env.NEXTAUTH_URL || "https://book.mattherrera.com"}/:path*`,
-                permanent: true,
-              },
-            ]
-          : []),
         {
           source: "/settings/organizations",
           destination: "/settings/organizations/profile",
