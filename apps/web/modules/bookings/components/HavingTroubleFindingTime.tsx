@@ -1,8 +1,8 @@
-import { useState } from "react";
-
+import process from "node:process";
 import { BOOKER_NUMBER_OF_DAYS_TO_LOAD } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { ArrowRightIcon, InfoIcon } from "@coss/ui/icons";
+import { useState } from "react";
 
 type Props = {
   onButtonClick: () => void;
@@ -27,8 +27,11 @@ export function HavingTroubleFindingTime(props: Props) {
   if (internalClick && !props.isScheduleLoading) return null;
   if (props.isScheduleLoading || !props.dayCount) return null;
 
+  // DK-CUSTOM: data-testid allows DK CSS to hide this component on booking page
   return (
-    <div className="bg-default border-subtle mt-6 flex w-1/2 min-w-0 items-center justify-between rounded-[32px] border p-3 text-sm leading-none shadow-sm lg:w-1/3">
+    <div
+      data-testid="having-trouble-finding-time"
+      className="bg-default border-subtle mt-6 flex w-1/2 min-w-0 items-center justify-between rounded-[32px] border p-3 text-sm leading-none shadow-sm lg:w-1/3">
       <div className="flex items-center gap-2 overflow-x-hidden">
         <InfoIcon className="text-default h-4 w-4" />
         <p className="w-full  leading-none">{t("having_trouble_finding_time")}</p>

@@ -1,24 +1,23 @@
-import { useCallback, useMemo, useRef } from "react";
-
 import dayjs from "@calcom/dayjs";
-import {
-  AvailableTimes,
-  AvailableTimesSkeleton,
-} from "@calcom/web/modules/bookings/components/AvailableTimes";
 import { useBookerStoreContext } from "@calcom/features/bookings/Booker/BookerStoreProvider";
-import type { IUseBookingLoadingStates } from "../hooks/useBookings";
+import { getQueryParam } from "@calcom/features/bookings/Booker/utils/query-param";
 import type { BookerEvent } from "@calcom/features/bookings/types";
-import type { Slot } from "~/schedules/lib/types";
-import { useNonEmptyScheduleDays } from "@calcom/web/modules/schedules/hooks/useNonEmptyScheduleDays";
-import { useSlotsForAvailableDates } from "@calcom/web/modules/schedules/hooks/useSlotsForDate";
 import { PUBLIC_INVALIDATE_AVAILABLE_SLOTS_ON_BOOKING_FORM } from "@calcom/lib/constants";
 import { localStorage } from "@calcom/lib/webstorage";
 import { BookerLayouts } from "@calcom/prisma/zod-utils";
 import classNames from "@calcom/ui/classNames";
-
+import {
+  AvailableTimes,
+  AvailableTimesSkeleton,
+} from "@calcom/web/modules/bookings/components/AvailableTimes";
 import { AvailableTimesHeader } from "@calcom/web/modules/bookings/components/AvailableTimesHeader";
+import { isWithin36Hours } from "@calcom/web/modules/bookings/dk-overrides/dk-slot-filter";
 import type { useScheduleForEventReturnType } from "@calcom/web/modules/schedules/hooks/useEvent";
-import { getQueryParam } from "@calcom/features/bookings/Booker/utils/query-param";
+import { useNonEmptyScheduleDays } from "@calcom/web/modules/schedules/hooks/useNonEmptyScheduleDays";
+import { useSlotsForAvailableDates } from "@calcom/web/modules/schedules/hooks/useSlotsForDate";
+import { useCallback, useMemo, useRef } from "react";
+import type { Slot } from "~/schedules/lib/types";
+import type { IUseBookingLoadingStates } from "../hooks/useBookings";
 
 type AvailableTimeSlotsProps = {
   extraDays?: number;
@@ -236,26 +235,33 @@ export const AvailableTimeSlots = ({
           Array.from({ length: 1 + (extraDays ?? 0) }).map((_, i) => <AvailableTimesSkeleton key={i} />)}
         {!isLoading &&
           slotsPerDay.length > 0 &&
-          slotsPerDay.map((slots) => (
-            <div key={slots.date} className="no-scrollbar overflow-x-hidden! h-full w-full overflow-y-auto">
-              <AvailableTimes
-                className={customClassNames?.availableTimeSlotsContainer}
-                customClassNames={customClassNames?.availableTimes}
-                showTimeFormatToggle={!isColumnView}
-                onTimeSelect={onTimeSelect}
-                onTentativeTimeSelect={onTentativeTimeSelect}
-                unavailableTimeSlots={unavailableTimeSlots}
-                slots={slots.slots}
-                showAvailableSeatsCount={showAvailableSeatsCount}
-                skipConfirmStep={skipConfirmStep}
-                seatsPerTimeSlot={seatsPerTimeSlot}
-                handleSlotClick={handleSlotClick}
-                confirmButtonDisabled={confirmButtonDisabled}
-                confirmStepClassNames={confirmStepClassNames}
-                {...props}
-              />
-            </div>
-          ))}
+          slotsPerDay.map((slots) => {
+            // DK-CUSTOM: When DK theme is active, filter slots to 36-hour window
+            const useDk36HourFilter = customClassNames?.availableTimes?.includes("dk-timeslot");
+            const filteredSlots = useDk36HourFilter
+              ? slots.slots.filter((slot) => isWithin36Hours(slot.time))
+              : slots.slots;
+            return (
+              <div key={slots.date} className="no-scrollbar overflow-x-hidden! h-full w-full overflow-y-auto">
+                <AvailableTimes
+                  className={customClassNames?.availableTimeSlotsContainer}
+                  customClassNames={customClassNames?.availableTimes}
+                  showTimeFormatToggle={!isColumnView}
+                  onTimeSelect={onTimeSelect}
+                  onTentativeTimeSelect={onTentativeTimeSelect}
+                  unavailableTimeSlots={unavailableTimeSlots}
+                  slots={filteredSlots}
+                  showAvailableSeatsCount={showAvailableSeatsCount}
+                  skipConfirmStep={skipConfirmStep}
+                  seatsPerTimeSlot={seatsPerTimeSlot}
+                  handleSlotClick={handleSlotClick}
+                  confirmButtonDisabled={confirmButtonDisabled}
+                  confirmStepClassNames={confirmStepClassNames}
+                  {...props}
+                />
+              </div>
+            );
+          })}
       </div>
     </>
   );

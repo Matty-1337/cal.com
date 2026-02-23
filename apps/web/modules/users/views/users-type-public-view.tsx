@@ -1,16 +1,13 @@
 "use client";
 
+import { getBookerWrapperClasses } from "@calcom/features/bookings/Booker/utils/getBookerWrapperClasses";
+import { BookerWebWrapper as Booker } from "@calcom/web/modules/bookings/components/BookerWebWrapper";
+import { dkBookingClassNames } from "@calcom/web/modules/users/views/dk-overrides/dk-booking-theme";
+import BookingPageErrorBoundary from "@components/error/BookingPageErrorBoundary";
+import type { inferSSRProps } from "@lib/types/inferSSRProps";
+import type { getServerSideProps } from "@server/lib/[user]/[type]/getServerSideProps";
 import type { EmbedProps } from "app/WithEmbedSSR";
 import { useSearchParams } from "next/navigation";
-
-import { BookerWebWrapper as Booker } from "@calcom/web/modules/bookings/components/BookerWebWrapper";
-import { getBookerWrapperClasses } from "@calcom/features/bookings/Booker/utils/getBookerWrapperClasses";
-
-import type { inferSSRProps } from "@lib/types/inferSSRProps";
-
-import BookingPageErrorBoundary from "@components/error/BookingPageErrorBoundary";
-
-import type { getServerSideProps } from "@server/lib/[user]/[type]/getServerSideProps";
 
 export type PageProps = inferSSRProps<typeof getServerSideProps> & EmbedProps;
 
@@ -34,7 +31,8 @@ function Type({ slug, user, isEmbed, booking, isBrandingHidden, eventData, orgBa
           username={user}
           eventSlug={slug}
           bookingData={booking}
-          hideBranding={isBrandingHidden}
+          hideBranding={isBrandingHidden ?? true}
+          customClassNames={dkBookingClassNames}
           eventData={eventData}
           entity={{ ...eventData.entity, eventTypeId: eventData?.id }}
           durationConfig={eventData.metadata?.multipleDuration}

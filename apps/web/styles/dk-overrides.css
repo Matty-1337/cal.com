@@ -1,0 +1,91 @@
+/* DK-CUSTOM: Delta Kinetics booking page overrides — Calendly-style layout & typography */
+
+.dk-booking {
+  min-height: 100dvh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.dk-booking [data-testid="booker-container"] {
+  max-width: 960px;
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 32px 40px;
+  background: white;
+  --booker-meta-width: 220px;
+  --booker-timeslots-width: 240px;
+}
+
+/* Typography */
+.dk-booking [data-testid="event-meta"] {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(107 114 128);
+}
+
+.dk-booking [data-testid="event-meta"] .text-text {
+  font-size: 14px;
+  color: rgb(107 114 128);
+}
+
+.dk-booking [data-testid="event-title"] {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgb(17 24 39);
+}
+
+.dk-booking [data-testid="event-meta"] + *,
+.dk-booking [data-testid="event-duration"],
+.dk-booking [data-testid="event-location"],
+.dk-booking [data-testid="event-timezone"] {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgb(107 114 128);
+}
+
+/* Time slot pills */
+.dk-booking .dk-timeslot,
+.dk-booking [data-testid="time"] {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dk-booking .dk-timeslot:hover,
+.dk-booking [data-testid="time"]:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+.dk-booking .dk-timeslot[data-selected="true"],
+.dk-booking [data-testid="time"][data-selected="true"] {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+/* Hide Cal.com chrome and optional UI */
+.dk-booking [data-testid="layout-toggle"],
+.dk-booking [data-testid="booker-layout-toggle"],
+.dk-booking [data-testid="cal-branding"],
+.dk-booking [data-testid="booking-page-header"],
+.dk-booking [data-testid="having-trouble-finding-time"] {
+  display: none !important;
+}
+
+.dk-booking [data-testid="seat-count"],
+.dk-booking [data-testid="occurrence-input"] {
+  display: none !important;
+}
+
+/* Remove default MONTH_VIEW top margin */
+.dk-booking [data-testid="date-picker-container"] {
+  margin-top: 0;
+}

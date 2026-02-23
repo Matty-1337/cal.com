@@ -10,6 +10,7 @@ import Script from "next/script";
 import type React from "react";
 
 import "../styles/globals.css";
+import "../styles/dk-overrides.css";
 import { AppRouterI18nProvider } from "./AppRouterI18nProvider";
 import { Providers } from "./providers";
 import { SpeculationRules } from "./SpeculationRules";
