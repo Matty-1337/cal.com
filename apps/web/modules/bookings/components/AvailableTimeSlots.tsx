@@ -11,7 +11,7 @@ import {
   AvailableTimesSkeleton,
 } from "@calcom/web/modules/bookings/components/AvailableTimes";
 import { AvailableTimesHeader } from "@calcom/web/modules/bookings/components/AvailableTimesHeader";
-import { isWithin36Hours } from "@calcom/web/modules/bookings/dk-overrides/dk-slot-filter";
+import { isWithin24Hours } from "@calcom/web/modules/bookings/dk-overrides/dk-slot-filter";
 import type { useScheduleForEventReturnType } from "@calcom/web/modules/schedules/hooks/useEvent";
 import { useNonEmptyScheduleDays } from "@calcom/web/modules/schedules/hooks/useNonEmptyScheduleDays";
 import { useSlotsForAvailableDates } from "@calcom/web/modules/schedules/hooks/useSlotsForDate";
@@ -237,9 +237,10 @@ export const AvailableTimeSlots = ({
           slotsPerDay.length > 0 &&
           slotsPerDay.map((slots) => {
             // DK-CUSTOM: When DK theme is active, filter slots to 36-hour window
-            const useDk36HourFilter = customClassNames?.availableTimes?.includes("dk-timeslot");
-            const filteredSlots = useDk36HourFilter
-              ? slots.slots.filter((slot) => isWithin36Hours(slot.time))
+            // DK-CUSTOM: When DK theme is active, filter slots to 24-hour window
+            const useDk24HourFilter = customClassNames?.availableTimes?.includes("dk-timeslot");
+            const filteredSlots = useDk24HourFilter
+              ? slots.slots.filter((slot) => isWithin24Hours(slot.time))
               : slots.slots;
             return (
               <div key={slots.date} className="no-scrollbar overflow-x-hidden! h-full w-full overflow-y-auto">
